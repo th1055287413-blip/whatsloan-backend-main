@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管道報表</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', sans-serif;
+  background: #f0f2f5;
+  min-height: 100vh;
+  padding: 1.5rem;
+  color: #1a1a2e;
+}
+.container { max-width: 720px; margin: 0 auto; }
+h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.02em;
+}
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  margin-bottom: 1rem;
+}
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.form-group { flex: 1; min-width: 120px; }
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #888;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.form-group input {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1.5px solid #e2e5ea;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+  background: #fafbfc;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: #4a6cf7;
+  background: #fff;
+}
+.btn-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  background: #4a6cf7;
+  color: #fff;
+  border: none;
+  padding: 0.55rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover { background: #3a5ce5; }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary:disabled { background: #c5cee8; cursor: not-allowed; transform: none; }
+.btn-quick {
+  background: none;
+  border: 1.5px solid #e2e5ea;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-quick:hover { border-color: #4a6cf7; color: #4a6cf7; }
+.btn-quick.active { border-color: #4a6cf7; color: #4a6cf7; background: #f0f4ff; }
+.error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: none;
+  padding: 0.5rem 0.75rem;
+  background: #fef2f2;
+  border-radius: 6px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+.stat-item {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  background: #f8f9fc;
+  border-radius: 10px;
+  transition: transform 0.2s;
+}
+.stat-item:hover { transform: translateY(-2px); }
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  font-variant-numeric: tabular-nums;
+}
+.stat-label {
+  font-size: 0.72rem;
+  color: #999;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.75rem;
+}
+.funnel-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.funnel-step:last-child { border-bottom: none; }
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #555;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-body { flex: 1; min-width: 0; }
+.step-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+.step-meta { flex: 1; }
+.step-type {
+  font-size: 0.72rem;
+  color: #999;
+  margin-bottom: 0.15rem;
+}
+.step-value {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.step-value svg { flex-shrink: 0; }
+.step-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+.step-dropoff {
+  font-size: 0.8rem;
+  color: #e74c3c;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+.step-visitors {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.step-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.step-bar {
+  flex: 1;
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.step-bar-fill {
+  height: 100%;
+  background: #4a6cf7;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.step-rate {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+  min-width: 45px;
+  text-align: right;
+}
+.result-section { display: none; }
+.loading {
+  display: none;
+  text-align: center;
+  padding: 2.5rem;
+}
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e2e5ea;
+  border-top-color: #4a6cf7;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 0.5rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 0.85rem; color: #999; }
+@media (max-width: 480px) {
+  body { padding: 1rem; }
+  .card { padding: 1rem; }
+  .stat-value { font-size: 1.3rem; }
+  .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>管道報表</h1>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>管道碼</label>
+        <input type="text" id="channelCode" placeholder="ABC123" maxlength="6">
+      </div>
+      <div class="form-group">
+        <label>密碼</label>
+        <input type="password" id="password" placeholder="查看密碼">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>開始日期</label>
+        <input type="date" id="startDate">
+      </div>
+      <div class="form-group">
+        <label>結束日期</label>
+        <input type="date" id="endDate">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="submitBtn" onclick="fetchReport()">查詢</button>
+      <button class="btn-quick active" onclick="setRange(0, this)">今天</button>
+      <button class="btn-quick" onclick="setRange(7, this)">近 7 天</button>
+      <button class="btn-quick" onclick="setRange(30, this)">近 30 天</button>
+    </div>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text">載入中...</div>
+  </div>
+
+  <div class="result-section" id="resultSection">
+    <div class="card">
+      <div class="section-title">流量統計</div>
+      <div class="stats-grid" id="statsGrid"></div>
+    </div>
+
+    <div class="card" id="funnelCard" style="display:none;">
+      <div class="section-title">轉化漏斗</div>
+      <div class="funnel" id="funnelContainer"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = window.location.origin;
+
+function fmt(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function setRange(days, el) {
+  const today = new Date();
+  document.getElementById('endDate').value = fmt(today);
+  if (days === 0) {
+    document.getElementById('startDate').value = fmt(today);
+  } else {
+    const start = new Date(today);
+    start.setDate(start.getDate() - days);
+    document.getElementById('startDate').value = fmt(start);
+  }
+  document.querySelectorAll('.btn-quick').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+// 預設日期：當天
+setRange(0, document.querySelector('.btn-quick'));
+
+// 優先從 URL query 帶入管道碼，其次恢復 localStorage
+const urlCode = new URLSearchParams(window.location.search).get('code');
+const savedCode = urlCode || localStorage.getItem('channel_code');
+if (savedCode) document.getElementById('channelCode').value = savedCode;
+
+async function fetchReport() {
+  const channelCode = document.getElementById('channelCode').value.trim();
+  const password = document.getElementById('password').value;
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
+  const errorMsg = document.getElementById('errorMsg');
+  const loading = document.getElementById('loading');
+  const resultSection = document.getElementById('resultSection');
+  const btn = document.getElementById('submitBtn');
+
+  errorMsg.style.display = 'none';
+  resultSection.style.display = 'none';
+
+  if (!channelCode || !password) {
+    errorMsg.textContent = '請輸入管道碼和密碼';
+    errorMsg.style.display = 'block';
+    return;
+  }
+
+  loading.style.display = 'block';
+  btn.disabled = true;
+
+  try {
+    const body = { channel_code: channelCode, password };
+    if (startDate) body.start_date = startDate;
+    if (endDate) body.end_date = endDate;
+
+    const resp = await fetch(API_BASE + '/api/channel-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error || '請求失敗');
+    }
+
+    const data = await resp.json();
+    localStorage.setItem('channel_code', channelCode);
+    renderStats(data.stats);
+    renderFunnel(data.funnel, data.funnel_error);
+    resultSection.style.display = 'block';
+  } catch (e) {
+    errorMsg.textContent = e.message;
+    errorMsg.style.display = 'block';
+  } finally {
+    loading.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+function renderStats(stats) {
+  if (!stats) return;
+  const grid = document.getElementById('statsGrid');
+  const items = [
+    { label: '訪客數', value: (stats.visitors || 0).toLocaleString() },
+    { label: '造訪次數', value: (stats.visits || 0).toLocaleString() },
+    { label: '頁面瀏覽', value: (stats.pageviews || 0).toLocaleString() },
+  ];
+  grid.innerHTML = items.map(i => `
+    <div class="stat-item">
+      <div class="stat-value">${i.value}</div>
+      <div class="stat-label">${i.label}</div>
+    </div>
+  `).join('');
+}
+
+function renderFunnel(funnel, funnelError) {
+  const card = document.getElementById('funnelCard');
+  const container = document.getElementById('funnelContainer');
+  if (!funnel || funnel.length === 0) {
+    if (funnelError) {
+      card.style.display = 'block';
+      container.innerHTML = `<div style="color:#e74c3c;font-size:0.85rem;">${funnelError}</div>`;
+    } else {
+      card.style.display = 'none';
+    }
+    return;
+  }
+  card.style.display = 'block';
+  const maxVisitors = funnel[0].visitors || 1;
+  const typeLabel = t => t === 'path' ? '已瀏覽的網頁' : '已觸發的事件';
+  const typeIcon = t => t === 'path'
+    ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>'
+    : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>';
+
+  container.innerHTML = funnel.map((step, i) => {
+    const visitors = step.visitors || 0;
+    const pct = ((visitors / maxVisitors) * 100).toFixed(2);
+    const dropped = step.dropped || 0;
+    return `
+      <div class="funnel-step">
+        <div class="step-num">${i + 1}</div>
+        <div class="step-body">
+          <div class="step-header">
+            <div class="step-meta">
+              <div class="step-type">${typeLabel(step.type)}</div>
+              <div class="step-value">${typeIcon(step.type)} ${step.value}</div>
+            </div>
+            <div class="step-stats">
+              ${i > 0 && dropped > 0 ? `<div class="step-dropoff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>${dropped}</div>` : ''}
+              <div class="step-visitors"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${visitors.toLocaleString()} 訪客</div>
+            </div>
+          </div>
+          <div class="step-bar-wrap">
+            <div class="step-bar"><div class="step-bar-fill" style="width:${pct}%"></div></div>
+            <div class="step-rate">${pct}%</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') fetchReport();
+});
+</script>
+</body>
+</html>

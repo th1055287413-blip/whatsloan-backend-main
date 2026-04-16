@@ -1,0 +1,67 @@
+name: Deploy Connector
+
+on:
+  push:
+    tags: ["connector/v*"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [testapi]
+    environment: ${{ matrix.environment }}
+    concurrency:
+      group: deploy-connector-${{ matrix.environment }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set build metadata
+        id: meta
+        run: |
+          echo "version=${GITHUB_REF_NAME#connector/v}" >> "$GITHUB_OUTPUT"
+          echo "commit=${GITHUB_SHA::8}" >> "$GITHUB_OUTPUT"
+          echo "time=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+          echo "image_tag=whatsmeow-connector:${GITHUB_REF_NAME#connector/v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg VERSION=${{ steps.meta.outputs.version }} \
+            --build-arg GIT_COMMIT=${{ steps.meta.outputs.commit }} \
+            --build-arg BUILD_TIME=${{ steps.meta.outputs.time }} \
+            -f Dockerfile.connector \
+            -t ${{ steps.meta.outputs.image_tag }} .
+
+      - name: Save image to tarball
+        run: docker save ${{ steps.meta.outputs.image_tag }} -o /tmp/whatsmeow-connector.tar
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "Host deploy" >> ~/.ssh/config
+          echo "  HostName ${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/config
+          echo "  Port ${{ secrets.DEPLOY_PORT || '22' }}" >> ~/.ssh/config
+          echo "  User root" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/deploy_key" >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+
+      - name: Transfer files
+        run: |
+          scp /tmp/whatsmeow-connector.tar deploy:/tmp/whatsmeow-connector.tar
+          scp docker-compose.yml deploy:${{ vars.DEPLOY_PATH }}/docker-compose.yml
+
+      - name: Deploy
+        run: |
+          ssh deploy << 'DEPLOY'
+            set -e
+            docker load -i /tmp/whatsmeow-connector.tar
+            cd ${{ vars.DEPLOY_PATH }}
+            CONNECTOR_TAG=${{ steps.meta.outputs.version }} docker compose up -d connector
+            rm /tmp/whatsmeow-connector.tar
+            echo "Deploy complete at $(date)"
+          DEPLOY

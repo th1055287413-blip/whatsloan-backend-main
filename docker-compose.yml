@@ -1,0 +1,24 @@
+services:
+  api:
+    image: whatsmeow-api:${TAG:-latest}
+    pull_policy: never
+    container_name: whatsmeow-api
+    env_file: .env
+    network_mode: host
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    stop_grace_period: 30s
+    restart: unless-stopped
+
+  connector:
+    image: whatsmeow-connector:${CONNECTOR_TAG:-latest}
+    pull_policy: never
+    container_name: whatsmeow-connector
+    env_file: .env
+    network_mode: host
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    stop_grace_period: 30s
+    restart: unless-stopped

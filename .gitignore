@@ -1,0 +1,131 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.classpath
+
+temp
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output
+.coverage
+
+# node_modules
+node_modules/
+jspm_packages/
+
+# Frontend build outputs
+frontend/dist/
+frontend/build/
+frontend/.nuxt/
+frontend/.next/
+frontend/.cache/
+frontend/.parcel-cache/
+
+# Backend build outputs
+/api
+/main
+*.exe
+*.dll
+*.so
+*.dylib
+bin/
+pkg/
+
+# Go specific
+*.test
+*.out
+*.prof
+go.work
+go.work.sum
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.cover
+
+# Dependency directories
+vendor/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+**/.env.development
+**/.env.production
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+.docker/
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+
+# Security
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Runtime and temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Application specific
+uploads/
+storage/
+public/storage
+public/hot
+storage/*.key
+
+# Local secrets (never commit)
+.claude/secrets/
+
+# Test files
+test*.js
+
+# Backend directories
+db/sessions/
+db/qrcodes/

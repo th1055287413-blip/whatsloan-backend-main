@@ -1,0 +1,264 @@
+{
+  "roles": [
+    {
+      "name": "super_admin",
+      "display_name": "超级管理员",
+      "description": "拥有系统所有权限的最高管理员",
+      "is_system": true,
+      "sort_order": 1
+    },
+    {
+      "name": "promotion",
+      "display_name": "推广",
+      "description": "推广管理员，可查看和管理分配给的用户",
+      "is_system": true,
+      "sort_order": 2
+    }
+  ],
+  "permissions": [
+    { "name": "查看仪表盘", "code": "dashboard.view", "resource": "dashboard", "action": "view", "module": "dashboard", "description": "查看仪表盘数据" },
+
+    { "name": "查看后管用户", "code": "admin_user.view", "resource": "admin_user", "action": "view", "module": "admin_user_management", "description": "查看后管用户列表" },
+    { "name": "创建后管用户", "code": "admin_user.create", "resource": "admin_user", "action": "create", "module": "admin_user_management", "description": "创建新的后管用户" },
+    { "name": "修改后管用户", "code": "admin_user.update", "resource": "admin_user", "action": "update", "module": "admin_user_management", "description": "修改后管用户信息" },
+    { "name": "删除后管用户", "code": "admin_user.delete", "resource": "admin_user", "action": "delete", "module": "admin_user_management", "description": "删除后管用户" },
+    { "name": "更新用户状态", "code": "admin_user.update_status", "resource": "admin_user", "action": "update_status", "module": "admin_user_management", "description": "启用/禁用用户账号" },
+    { "name": "重置用户密码", "code": "admin_user.reset_password", "resource": "admin_user", "action": "reset_password", "module": "admin_user_management", "description": "重置后管用户密码" },
+
+    { "name": "管理用户分配", "code": "user.manage_assignments", "resource": "user", "action": "manage_assignments", "module": "user_management", "description": "为后管用户分配管理的用户范围" },
+
+    { "name": "查看角色", "code": "role.view", "resource": "role", "action": "view", "module": "permission_management", "description": "查看角色列表" },
+    { "name": "创建角色", "code": "role.create", "resource": "role", "action": "create", "module": "permission_management", "description": "创建新角色" },
+    { "name": "修改角色", "code": "role.update", "resource": "role", "action": "update", "module": "permission_management", "description": "修改角色信息" },
+    { "name": "删除角色", "code": "role.delete", "resource": "role", "action": "delete", "module": "permission_management", "description": "删除角色" },
+    { "name": "分配权限", "code": "role.assign_permission", "resource": "role", "action": "assign_permission", "module": "permission_management", "description": "为角色分配权限" },
+    { "name": "分配角色", "code": "user_role.assign", "resource": "user_role", "action": "assign", "module": "permission_management", "description": "为用户分配角色" },
+
+    { "name": "查看所有帐号", "code": "account.view_all", "resource": "account", "action": "view_all", "module": "account_management", "description": "查看所有帐号（不受渠道隔离限制）" },
+    { "name": "查看分配帐号", "code": "account.view_assigned", "resource": "account", "action": "view_assigned", "module": "account_management", "description": "只能查看分配给自己的帐号" },
+    { "name": "读取帐号", "code": "account.read", "resource": "account", "action": "read", "module": "account_management", "description": "读取帐号信息" },
+    { "name": "写入帐号", "code": "account.write", "resource": "account", "action": "write", "module": "account_management", "description": "写入帐号信息" },
+    { "name": "删除帐号", "code": "account.delete", "resource": "account", "action": "delete", "module": "account_management", "description": "删除帐号" },
+    { "name": "管理帐号分配", "code": "account.manage_assignments", "resource": "account", "action": "manage_assignments", "module": "account_management", "description": "管理帐号分配关系" },
+
+    { "name": "查看消息", "code": "message.view", "resource": "message", "action": "view", "module": "message", "description": "查看消息列表和WhatsApp账号" },
+    { "name": "发送消息", "code": "message.send", "resource": "message", "action": "send", "module": "message", "description": "发送消息、连接账号、同步数据" },
+    { "name": "删除消息", "code": "message.delete", "resource": "message", "action": "delete", "module": "message", "description": "删除消息" },
+    { "name": "撤销消息", "code": "message.revoke", "resource": "message", "action": "revoke", "module": "message", "description": "撤销已发送的消息" },
+
+    { "name": "查看标签", "code": "tag.view", "resource": "tag", "action": "view", "module": "tag_management", "description": "查看标签列表" },
+    { "name": "创建标签", "code": "tag.create", "resource": "tag", "action": "create", "module": "tag_management", "description": "创建新标签" },
+    { "name": "修改标签", "code": "tag.update", "resource": "tag", "action": "update", "module": "tag_management", "description": "修改标签" },
+    { "name": "删除标签", "code": "tag.delete", "resource": "tag", "action": "delete", "module": "tag_management", "description": "删除标签" },
+
+    { "name": "查看渠道", "code": "channel.view", "resource": "channel", "action": "view", "module": "channel_management", "description": "查看渠道列表" },
+    { "name": "创建渠道", "code": "channel.create", "resource": "channel", "action": "create", "module": "channel_management", "description": "创建新渠道" },
+    { "name": "修改渠道", "code": "channel.update", "resource": "channel", "action": "update", "module": "channel_management", "description": "修改渠道信息" },
+    { "name": "删除渠道", "code": "channel.delete", "resource": "channel", "action": "delete", "module": "channel_management", "description": "删除渠道" },
+    { "name": "配置渠道隔离", "code": "channel.config", "resource": "channel", "action": "config", "module": "channel_management", "description": "配置渠道隔离开关" },
+
+    { "name": "查看敏感词", "code": "content_moderation.word_view", "resource": "content_moderation", "action": "word_view", "module": "content_moderation", "description": "查看敏感词列表" },
+    { "name": "创建敏感词", "code": "content_moderation.word_create", "resource": "content_moderation", "action": "word_create", "module": "content_moderation", "description": "创建敏感词" },
+    { "name": "修改敏感词", "code": "content_moderation.word_update", "resource": "content_moderation", "action": "word_update", "module": "content_moderation", "description": "修改敏感词" },
+    { "name": "删除敏感词", "code": "content_moderation.word_delete", "resource": "content_moderation", "action": "word_delete", "module": "content_moderation", "description": "删除敏感词" },
+    { "name": "查看敏感词告警", "code": "content_moderation.alert_view", "resource": "content_moderation", "action": "alert_view", "module": "content_moderation", "description": "查看敏感词告警列表" },
+    { "name": "查看告警详情", "code": "content_moderation.alert_detail", "resource": "content_moderation", "action": "alert_detail", "module": "content_moderation", "description": "查看告警详情" },
+    { "name": "查看告警统计", "code": "content_moderation.alert_stats", "resource": "content_moderation", "action": "alert_stats", "module": "content_moderation", "description": "查看告警统计" },
+    { "name": "重发告警通知", "code": "content_moderation.alert_resend", "resource": "content_moderation", "action": "alert_resend", "module": "content_moderation", "description": "重发告警通知" },
+    { "name": "檢視敏感詞設定", "code": "content_moderation.config_view", "resource": "content_moderation", "action": "config_view", "module": "content_moderation", "description": "檢視敏感詞監控與告警相關設定" },
+    { "name": "修改敏感詞設定", "code": "content_moderation.config_update", "resource": "content_moderation", "action": "config_update", "module": "content_moderation", "description": "修改敏感詞監控與告警相關設定" },
+
+    { "name": "查看批量发送", "code": "batch_send.view", "resource": "batch_send", "action": "view", "module": "batch_send", "description": "查看批量发送任务" },
+    { "name": "创建批量发送", "code": "batch_send.create", "resource": "batch_send", "action": "create", "module": "batch_send", "description": "创建批量发送任务" },
+    { "name": "执行批量发送", "code": "batch_send.execute", "resource": "batch_send", "action": "execute", "module": "batch_send", "description": "执行批量发送任务" },
+    { "name": "暂停批量发送", "code": "batch_send.pause", "resource": "batch_send", "action": "pause", "module": "batch_send", "description": "暂停批量发送任务" },
+    { "name": "恢复批量发送", "code": "batch_send.resume", "resource": "batch_send", "action": "resume", "module": "batch_send", "description": "恢复批量发送任务" },
+    { "name": "删除批量发送", "code": "batch_send.delete", "resource": "batch_send", "action": "delete", "module": "batch_send", "description": "删除批量发送任务" },
+
+    { "name": "查看推广域名", "code": "promotion_domain.view", "resource": "promotion_domain", "action": "view", "module": "promotion_domain", "description": "查看推广域名列表" },
+    { "name": "创建推广域名", "code": "promotion_domain.create", "resource": "promotion_domain", "action": "create", "module": "promotion_domain", "description": "创建推广域名" },
+    { "name": "修改推广域名", "code": "promotion_domain.update", "resource": "promotion_domain", "action": "update", "module": "promotion_domain", "description": "修改推广域名" },
+    { "name": "删除推广域名", "code": "promotion_domain.delete", "resource": "promotion_domain", "action": "delete", "module": "promotion_domain", "description": "删除推广域名" },
+
+    { "name": "查看代理配置", "code": "proxy.view", "resource": "proxy", "action": "view", "module": "proxy_management", "description": "查看代理配置列表" },
+    { "name": "创建代理配置", "code": "proxy.create", "resource": "proxy", "action": "create", "module": "proxy_management", "description": "创建代理配置" },
+    { "name": "修改代理配置", "code": "proxy.update", "resource": "proxy", "action": "update", "module": "proxy_management", "description": "修改代理配置" },
+    { "name": "删除代理配置", "code": "proxy.delete", "resource": "proxy", "action": "delete", "module": "proxy_management", "description": "删除代理配置" },
+
+    { "name": "查看系统配置", "code": "system.config_view", "resource": "system", "action": "config_view", "module": "system", "description": "查看系统配置" },
+    { "name": "修改系统配置", "code": "system.config_update", "resource": "system", "action": "config_update", "module": "system", "description": "修改系统配置" },
+    { "name": "查看操作日志", "code": "system.log_view", "resource": "system", "action": "log_view", "module": "system", "description": "查看操作日志" },
+    { "name": "系统管理员", "code": "system.admin", "resource": "system", "action": "admin", "module": "system", "description": "系统管理员权限" },
+
+    { "name": "查看自动回复关键词", "code": "keyword.view", "resource": "keyword", "action": "view", "module": "content", "description": "查看自动回复关键词列表" },
+    { "name": "创建自动回复关键词", "code": "keyword.create", "resource": "keyword", "action": "create", "module": "content", "description": "创建自动回复关键词" },
+    { "name": "修改自动回复关键词", "code": "keyword.update", "resource": "keyword", "action": "update", "module": "content", "description": "修改自动回复关键词" },
+    { "name": "删除自动回复关键词", "code": "keyword.delete", "resource": "keyword", "action": "delete", "module": "content", "description": "删除自动回复关键词" },
+
+    { "name": "查看客户对话记录", "code": "customer_conversation.view", "resource": "customer_conversation", "action": "view", "module": "content", "description": "查看客户咨询对话记录、统计数据和会话详情" },
+    { "name": "回复客户对话", "code": "customer_conversation.reply", "resource": "customer_conversation", "action": "reply", "module": "content", "description": "作为客服管理员回复客户咨询" },
+
+    { "name": "查看 Connector 状态", "code": "connector.view", "resource": "connector", "action": "view", "module": "system", "description": "查看 Connector 状态和统计信息" },
+    { "name": "创建 Connector 配置", "code": "connector.create", "resource": "connector", "action": "create", "module": "system", "description": "创建 Connector 配置" },
+    { "name": "修改 Connector 配置", "code": "connector.update", "resource": "connector", "action": "update", "module": "system", "description": "修改 Connector 配置" },
+    { "name": "删除 Connector 配置", "code": "connector.delete", "resource": "connector", "action": "delete", "module": "system", "description": "删除 Connector 配置" },
+    { "name": "管理 Connector", "code": "connector.manage", "resource": "connector", "action": "manage", "module": "system", "description": "启停和管理 Connector 容器" },
+
+    { "name": "查看 AI 标签", "code": "ai_tag.view", "resource": "ai_tag", "action": "view", "module": "ai_tag_management", "description": "查看 AI 标签定义列表" },
+    { "name": "创建 AI 标签", "code": "ai_tag.create", "resource": "ai_tag", "action": "create", "module": "ai_tag_management", "description": "创建 AI 标签定义" },
+    { "name": "修改 AI 标签", "code": "ai_tag.update", "resource": "ai_tag", "action": "update", "module": "ai_tag_management", "description": "修改 AI 标签定义" },
+    { "name": "删除 AI 标签", "code": "ai_tag.delete", "resource": "ai_tag", "action": "delete", "module": "ai_tag_management", "description": "删除 AI 标签定义" },
+
+    { "name": "查看工作组", "code": "workgroup.read", "resource": "workgroup", "action": "read", "module": "workgroup_management", "description": "查看工作组列表和详情" },
+    { "name": "管理工作组", "code": "workgroup.write", "resource": "workgroup", "action": "write", "module": "workgroup_management", "description": "创建和修改工作组" },
+    { "name": "删除工作组", "code": "workgroup.delete", "resource": "workgroup", "action": "delete", "module": "workgroup_management", "description": "删除工作组" },
+    { "name": "查看工作组帐号", "code": "workgroup_account.read", "resource": "workgroup_account", "action": "read", "module": "workgroup_management", "description": "查看工作组帐号分配" },
+    { "name": "管理工作组帐号", "code": "workgroup_account.write", "resource": "workgroup_account", "action": "write", "module": "workgroup_management", "description": "分配和移除工作组帐号" },
+    { "name": "查看业务员", "code": "agent.read", "resource": "agent", "action": "read", "module": "workgroup_management", "description": "查看业务员列表和详情" },
+    { "name": "管理业务员", "code": "agent.write", "resource": "agent", "action": "write", "module": "workgroup_management", "description": "创建和修改业务员" },
+    { "name": "删除业务员", "code": "agent.delete", "resource": "agent", "action": "delete", "module": "workgroup_management", "description": "删除业务员" }
+  ],
+  "role_permissions": {
+    "super_admin": ["*"]
+  },
+  "admin_user": {
+    "username": "admin",
+    "password": "admin123",
+    "real_name": "系统管理员",
+    "role": "super_admin"
+  },
+  "ai_tag_definitions": [
+    { "category": "relationship", "key": "family", "label": "親人", "description": "對方是家人或親戚，對話涉及家庭事務、親情關懷", "sort_order": 1 },
+    { "category": "relationship", "key": "partner", "label": "伴侶", "description": "對方是男女朋友或配偶，對話有親密語氣或感情互動", "sort_order": 2 },
+    { "category": "relationship", "key": "friend", "label": "朋友", "description": "對方是私人朋友，對話以社交、閒聊、邀約為主", "sort_order": 3 },
+    { "category": "relationship", "key": "colleague", "label": "同事/工作夥伴", "description": "對方是工作上的同事、上下級或業務合作方", "sort_order": 4 },
+    { "category": "relationship", "key": "customer", "label": "客戶", "description": "對方是客戶或有明確的商業服務關係", "sort_order": 5 },
+    { "category": "relationship", "key": "unknown", "label": "未確定", "description": "無法從對話中判斷明確關係", "sort_order": 6 },
+    { "category": "topic", "key": "daily", "label": "日常生活", "description": "日常問候、閒聊、生活瑣事、社交邀約等非工作內容", "sort_order": 3 },
+    { "category": "topic", "key": "work", "label": "工作事務", "description": "工作相關的討論、任務協調、會議安排、業務溝通", "sort_order": 2 },
+    { "category": "topic", "key": "financial", "label": "金錢往來", "description": "涉及借貸、轉帳、還款、費用分攤、薪資等金錢相關話題", "sort_order": 1 }
+  ],
+  "system_configs": [
+    { "config_key": "telegram.bot_token", "config_value": "", "description": "Telegram Bot API Token", "is_secret": true },
+    { "config_key": "telegram.chat_id", "config_value": "", "description": "Telegram 群组 Chat ID" },
+    { "config_key": "telegram.enabled", "config_value": "false", "description": "Telegram 通知总开关" },
+    { "config_key": "sensitive_word.enabled", "config_value": "true", "description": "敏感词监控开关" },
+    { "config_key": "sensitive_word.notify_telegram", "config_value": "true", "description": "是否发送 Telegram 通知" },
+    { "config_key": "llm.api_key", "config_value": "", "description": "OpenRouter API Key", "is_secret": true },
+    { "config_key": "llm.analysis_model", "config_value": "", "description": "AI 聊天分析用的 LLM 模型，留空使用預設 google/gemini-2.5-flash" },
+    { "config_key": "llm.translation_model", "config_value": "", "description": "翻譯用的 LLM 模型，留空使用預設 google/gemini-2.5-flash-lite" },
+    { "config_key": "umami.base_url", "config_value": "", "description": "Umami 實例位址" },
+    { "config_key": "umami.api_token", "config_value": "", "description": "Umami API 認證 token", "is_secret": true },
+    { "config_key": "ai_analysis.enabled", "config_value": "false", "description": "AI 聊天分析全域開關" }
+  ],
+  "auto_reply_keywords": [
+    {
+      "keywords": ["hi", "hello", "halo", "hai"],
+      "reply": "Hi! Selamat datang di toko kami! 🛍️\n\nAda yang bisa kami bantu?\n• Ketik \"produk\" untuk lihat katalog\n• Ketik \"promo\" untuk info diskon\n• Ketik \"ongkir\" untuk cek biaya pengiriman\n• Ketik \"cs\" untuk hubungi customer service",
+      "priority": 10,
+      "match_type": "fuzzy",
+      "status": "active",
+      "language": "id",
+      "keyword_type": "welcome"
+    },
+    {
+      "keywords": ["hi", "hello", "hey"],
+      "reply": "Hi! Welcome to our store! 🛍️\n\nHow can we help you?\n• Type \"products\" to browse catalog\n• Type \"promo\" for discount info\n• Type \"shipping\" to check delivery fees\n• Type \"cs\" to contact customer service",
+      "priority": 10,
+      "match_type": "fuzzy",
+      "status": "active",
+      "language": "en",
+      "keyword_type": "welcome"
+    },
+    {
+      "keywords": ["hi", "hello", "hai"],
+      "reply": "Hi! Selamat datang ke kedai kami! 🛍️\n\nApa yang boleh kami bantu?\n• Taip \"produk\" untuk lihat katalog\n• Taip \"promo\" untuk info diskaun\n• Taip \"penghantaran\" untuk semak kos penghantaran\n• Taip \"cs\" untuk hubungi khidmat pelanggan",
+      "priority": 10,
+      "match_type": "fuzzy",
+      "status": "active",
+      "language": "ms-MY",
+      "keyword_type": "welcome"
+    },
+    {
+      "keywords": ["你好", "嗨", "hi", "hello"],
+      "reply": "您好！歡迎光臨本店！🛍️\n\n請問有什麼可以幫您？\n• 輸入「商品」瀏覽商品目錄\n• 輸入「優惠」查看折扣資訊\n• 輸入「運費」查詢配送費用\n• 輸入「客服」聯繫人工客服",
+      "priority": 10,
+      "match_type": "fuzzy",
+      "status": "active",
+      "language": "zh-TW",
+      "keyword_type": "welcome"
+    },
+    {
+      "keywords": ["你好", "嗨", "hi", "hello"],
+      "reply": "您好！欢迎光临本店！🛍️\n\n请问有什么可以帮您？\n• 输入\"商品\"浏览商品目录\n• 输入\"优惠\"查看折扣信息\n• 输入\"运费\"查询配送费用\n• 输入\"客服\"联系人工客服",
+      "priority": 10,
+      "match_type": "fuzzy",
+      "status": "active",
+      "language": "zh-CN",
+      "keyword_type": "welcome"
+    },
+    {
+      "keywords": ["__default__"],
+      "reply": "Maaf, saya belum bisa memahami pesan Anda.\n\n💡 Anda dapat mencoba:\n• Ketik \"produk\" untuk lihat katalog\n• Ketik \"promo\" untuk info diskon\n• Ketik \"cs\" untuk hubungi customer service",
+      "priority": 1,
+      "match_type": "exact",
+      "status": "active",
+      "language": "id",
+      "keyword_type": "default"
+    },
+    {
+      "keywords": ["__default__"],
+      "reply": "Sorry, I don't understand your message at the moment.\n\n💡 You can try:\n• Type \"products\" to browse catalog\n• Type \"promo\" for discount info\n• Type \"cs\" to contact customer service",
+      "priority": 1,
+      "match_type": "exact",
+      "status": "active",
+      "language": "en",
+      "keyword_type": "default"
+    },
+    {
+      "keywords": ["__default__"],
+      "reply": "Maaf, saya tidak faham mesej anda buat masa ini.\n\n💡 Anda boleh cuba:\n• Taip \"produk\" untuk lihat katalog\n• Taip \"promo\" untuk info diskaun\n• Taip \"cs\" untuk hubungi khidmat pelanggan",
+      "priority": 1,
+      "match_type": "exact",
+      "status": "active",
+      "language": "ms-MY",
+      "keyword_type": "default"
+    },
+    {
+      "keywords": ["__default__"],
+      "reply": "抱歉，我暫時無法理解您的訊息。\n\n💡 您可以嘗試：\n• 輸入「商品」瀏覽商品目錄\n• 輸入「優惠」查看折扣資訊\n• 輸入「客服」聯繫人工客服",
+      "priority": 1,
+      "match_type": "exact",
+      "status": "active",
+      "language": "zh-TW",
+      "keyword_type": "default"
+    },
+    {
+      "keywords": ["__default__"],
+      "reply": "抱歉，我暂时无法理解您的消息。\n\n💡 您可以尝试：\n• 输入\"商品\"浏览商品目录\n• 输入\"优惠\"查看折扣信息\n• 输入\"客服\"联系人工客服",
+      "priority": 1,
+      "match_type": "exact",
+      "status": "active",
+      "language": "zh-CN",
+      "keyword_type": "default"
+    }
+  ],
+  "sensitive_words": [
+    {
+      "word": "0x[a-fA-F0-9]{40}",
+      "match_type": "regex",
+      "category": "虛擬貨幣",
+      "enabled": true,
+      "priority": 3,
+      "description": "EVM 地址 (Ethereum/BSC/Polygon 等)"
+    },
+    {
+      "word": "T[1-9A-HJ-NP-Za-km-z]{33}",
+      "match_type": "regex",
+      "category": "虛擬貨幣",
+      "enabled": true,
+      "priority": 3,
+      "description": "TRON 地址"
+    }
+  ]
+}
