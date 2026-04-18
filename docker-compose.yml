@@ -4,7 +4,9 @@ services:
     pull_policy: never
     container_name: whatsmeow-api
     env_file: .env
-    network_mode: host
+    #network_mode: host
+    ports:
+      - "8080:8080
     volumes:
       - ./uploads:/app/uploads
       - ./logs:/app/logs
