@@ -29,7 +29,7 @@ func (m *Manager) HandleGetQRCode(ctx context.Context, cmd *protocol.Command, pa
 	// Create new device for new login
 	device := m.container.NewDevice()
 	client := whatsmeow.NewClient(device, waLog.Stdout("WhatsApp", "INFO", true))
-
+	client.EnableAutoReconnect = true
 	// Create cancellable context
 	sessionCtx, cancel := context.WithCancel(context.Background())
 
@@ -155,7 +155,7 @@ func (m *Manager) HandleGetPairingCode(ctx context.Context, cmd *protocol.Comman
 	// Create new device for new login
 	device := m.container.NewDevice()
 	client := whatsmeow.NewClient(device, waLog.Stdout("WhatsApp", "INFO", true))
-
+	client.EnableAutoReconnect = true
 	// Create cancellable context
 	sessionCtx, cancel := context.WithCancel(context.Background())
 
