@@ -287,7 +287,7 @@ func (s *chatAIAnalysisService) buildPrompt(
 	var b strings.Builder
 
 	// Tag definitions grouped by category
-	b.WriteString("## 候選標籤\n\n")
+	b.WriteString("## 候选标签\n\n")
 	grouped := make(map[string][]model.AiTagDefinition)
 	for _, d := range defs {
 		grouped[d.Category] = append(grouped[d.Category], d)
@@ -309,10 +309,10 @@ func (s *chatAIAnalysisService) buildPrompt(
 
 	// History messages (reverse to chronological order)
 	if len(history) > 0 {
-		b.WriteString("## 歷史訊息（舊→新）\n\n")
+		b.WriteString("## 历史消息（旧→新）\n\n")
 		for i := len(history) - 1; i >= 0; i-- {
 			m := history[i]
-			direction := "對方"
+			direction := "对方"
 			if m.IsFromMe {
 				direction = "我方"
 			}
@@ -322,9 +322,9 @@ func (s *chatAIAnalysisService) buildPrompt(
 	}
 
 	// New messages
-	b.WriteString("## 新訊息\n\n")
+	b.WriteString("## 新消息\n\n")
 	for _, m := range newMsgs {
-		direction := "對方"
+		direction := "对方"
 		if m.IsFromMe {
 			direction = "我方"
 		}
@@ -332,25 +332,25 @@ func (s *chatAIAnalysisService) buildPrompt(
 	}
 	b.WriteString("\n")
 
-	b.WriteString("## 輸出格式\n\n請回傳 JSON：\n```json\n{\"relationship\": \"<key>\", \"topics\": [\"<key>\", ...], \"summary\": \"<摘要>\"}\n```\n")
+	b.WriteString("## 输出格式\n\n请返回 JSON：\n```json\n{\"relationship\": \"<key>\", \"topics\": [\"<key>\", ...], \"summary\": \"<摘要>\"}\n```\n")
 
 	return b.String()
 }
 
 func systemPrompt() string {
-	return `你是一位對話分析助手。分析聊天記錄，判斷帳號主人與對方的關係、對話的主題性質。
+	return `你是一位对话分析助手。分析聊天记录，判断账号主人与对方的关系、对话的主题性质。
 
-判斷依據：
-- relationship：根據稱呼方式、語氣親疏、話題內容判斷雙方關係
-- topics：對話涉及哪些主題（可多選），特別注意是否有金錢相關內容（借貸、轉帳、還款等）
-- summary：概括對話重點，包含關鍵事件和雙方互動模式
+判断依据：
+- relationship：根据称呼方式、语气亲疏、话题内容判断双方关系
+- topics：对话涉及哪些主题（可多选），特别注意是否有金钱相关内容（借贷、转账、还款等）
+- summary：概括对话重点，包含关键事件和双方互动模式
 
-規則：
-1. relationship 只能選 1 個
-2. topics 選 1～3 個
-3. 只能從候選列表中選擇，不可自創
-4. summary 用 3-5 句話概括對話重點與脈絡，使用中文
-5. 只回傳 JSON，不要加任何解釋`
+规则：
+1. relationship 只能选 1 个
+2. topics 选 1～3 个
+3. 只能从候选列表中选择，不可自创
+4. summary 用 3-5 句话概括对话重点与脉络，**使用简体中文**
+5. 只返回 JSON，不要加任何解释`
 }
 
 func parseResult(raw string) (*analysisResult, error) {

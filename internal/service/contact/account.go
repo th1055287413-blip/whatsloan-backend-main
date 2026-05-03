@@ -262,16 +262,19 @@ func (s *AccountServiceImpl) ListAccounts(page, pageSize int, filters map[string
 		var wgas []struct {
 			AccountID   uint
 			WorkgroupID uint
+			AssignedAgentID *uint
 		}
 		if err := s.db.Table("workgroup_accounts").
-			Select("account_id, workgroup_id").
+			Select("account_id, workgroup_id, assigned_agent_id").
 			Where("account_id IN ?", ids).
 			Scan(&wgas).Error; err == nil && len(wgas) > 0 {
 			wgIDs := make([]uint, 0)
 			acctWgMap := make(map[uint]uint)
+			acctAssignedAgentMap := make(map[uint]*uint)
 			for _, wa := range wgas {
 				acctWgMap[wa.AccountID] = wa.WorkgroupID
 				wgIDs = append(wgIDs, wa.WorkgroupID)
+				acctAssignedAgentMap[wa.AccountID] = wa.AssignedAgentID
 			}
 			var workgroups []struct {
 				ID   uint
@@ -288,6 +291,49 @@ func (s *AccountServiceImpl) ListAccounts(page, pageSize int, filters map[string
 				for _, a := range accounts {
 					if wgID, ok := acctWgMap[a.ID]; ok {
 						a.WorkgroupName = wgNameMap[wgID]
+					}
+				}
+			}
+
+			// 填充 AssignedAgent（username + role）
+			agentIDSet := make(map[uint]bool)
+			for _, agentIDPtr := range acctAssignedAgentMap {
+				if agentIDPtr != nil && *agentIDPtr != 0 {
+					agentIDSet[*agentIDPtr] = true
+				}
+			}
+			if len(agentIDSet) > 0 {
+				agentIDs := make([]uint, 0, len(agentIDSet))
+				for id := range agentIDSet {
+					agentIDs = append(agentIDs, id)
+				}
+				var agents []struct {
+					ID       uint
+					Username string
+					Role     string
+				}
+				if err := s.db.Model(&model.Agent{}).
+					Select("id, username, role").
+					Where("id IN ?", agentIDs).
+					Scan(&agents).Error; err == nil {
+					agentMap := make(map[uint]struct {
+						Username string
+						Role     string
+					})
+					for _, ag := range agents {
+						agentMap[ag.ID] = struct {
+							Username string
+							Role     string
+						}{Username: ag.Username, Role: ag.Role}
+					}
+					for _, a := range accounts {
+						if agentIDPtr, ok := acctAssignedAgentMap[a.ID]; ok && agentIDPtr != nil && *agentIDPtr != 0 {
+							a.AssignedAgentID = agentIDPtr
+							if info, ok := agentMap[*agentIDPtr]; ok {
+								a.AssignedAgentName = info.Username
+								a.AssignedAgentRole = info.Role
+							}
+						}
 					}
 				}
 			}
@@ -340,6 +386,22 @@ func (s *AccountServiceImpl) GetAccount(id uint) (*model.WhatsAppAccount, error)
 		var wgName string
 		if err := s.db.Model(&model.Workgroup{}).Select("name").Where("id = ?", wga.WorkgroupID).Scan(&wgName).Error; err == nil {
 			account.WorkgroupName = wgName
+		}
+
+		// 填充 assigned_agent（可為 NULL）
+		if wga.AssignedAgentID != nil && *wga.AssignedAgentID != 0 {
+			account.AssignedAgentID = wga.AssignedAgentID
+			var agent struct {
+				Username string
+				Role     string
+			}
+			if err := s.db.Model(&model.Agent{}).
+				Select("username, role").
+				Where("id = ? AND deleted_at IS NULL", *wga.AssignedAgentID).
+				Scan(&agent).Error; err == nil {
+				account.AssignedAgentName = agent.Username
+				account.AssignedAgentRole = agent.Role
+			}
 		}
 	}
 

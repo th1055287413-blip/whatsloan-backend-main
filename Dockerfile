@@ -1,4 +1,4 @@
-FROM golang:1.25-alpine AS builder
+FROM m.daocloud.io/docker.io/library/golang:1.25-alpine AS builder
 
 WORKDIR /src
 COPY go.mod go.sum ./
@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
       -X whatsapp_golang/internal/config.BuildTime=${BUILD_TIME}" \
     -o /api ./cmd/api
 
-FROM alpine:3.21
+FROM m.daocloud.io/docker.io/library/alpine:3.21
 
 RUN apk add --no-cache ca-certificates tzdata
 

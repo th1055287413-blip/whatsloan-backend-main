@@ -147,7 +147,22 @@ func (s *workgroupService) Archive(id uint) error {
 	if wg.Code == model.WorkgroupCodeAdmin {
 		return errors.New("預設管理員工作組無法封存")
 	}
-	return s.db.Model(&model.Workgroup{}).Where("id = ?", id).Update("status", model.WorkgroupStatusArchived).Error
+	return s.db.Transaction(func(tx *gorm.DB) error {
+		// 1) 封存工作組
+		if err := tx.Model(&model.Workgroup{}).
+			Where("id = ?", id).
+			Update("status", model.WorkgroupStatusArchived).Error; err != nil {
+			return err
+		}
+
+		// 2) 釋放該工作組下所有帳號（回到總台 / 不再歸屬任何工作組）
+		if err := tx.Where("workgroup_id = ?", id).
+			Delete(&model.WorkgroupAccount{}).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 func (s *workgroupService) AssignAccounts(workgroupID uint, accountIDs []uint, adminID uint) error {

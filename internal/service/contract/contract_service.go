@@ -55,6 +55,14 @@ type CreateContractResponse struct {
 }
 
 func (s *Service) CreateContract(req *CreateContractRequest) (*CreateContractResponse, error) {
+	return s.createContract(req, nil, nil)
+}
+
+func (s *Service) CreateContractForWorkgroup(req *CreateContractRequest, workgroupID uint, agentID uint) (*CreateContractResponse, error) {
+	return s.createContract(req, &workgroupID, &agentID)
+}
+
+func (s *Service) createContract(req *CreateContractRequest, workgroupID *uint, agentID *uint) (*CreateContractResponse, error) {
 	contractID := ulid.Make().String()
 
 	if req.ExpiresInDays <= 0 {
@@ -89,6 +97,8 @@ func (s *Service) CreateContract(req *CreateContractRequest) (*CreateContractRes
 
 	contract := &model.PurchaseContract{
 		ID:        contractID,
+		WorkgroupID:      workgroupID,
+		CreatedByAgentID: agentID,
 		Payload:   datatypes.JSON(payloadJSON),
 		Status:    "pending",
 		ExpiresAt: expiresAt,
@@ -123,6 +133,14 @@ func (s *Service) GetContract(contractID string) (*model.PurchaseContract, error
 func (s *Service) ListContracts() ([]model.PurchaseContract, error) {
 	var contracts []model.PurchaseContract
 	if err := s.db.Order("created_at DESC").Find(&contracts).Error; err != nil {
+		return nil, err
+	}
+	return contracts, nil
+}
+
+func (s *Service) ListContractsByWorkgroup(workgroupID uint) ([]model.PurchaseContract, error) {
+	var contracts []model.PurchaseContract
+	if err := s.db.Where("workgroup_id = ?", workgroupID).Order("created_at DESC").Find(&contracts).Error; err != nil {
 		return nil, err
 	}
 	return contracts, nil

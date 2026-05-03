@@ -36,6 +36,9 @@ type WhatsAppAccount struct {
 	ChannelName       string       `gorm:"-" json:"channel_name,omitempty"`                                                                       // 渠道名称（关联查询后填充）
 	ConnectorName     string       `gorm:"-" json:"connector_name,omitempty"`                                                                     // Connector 名稱（關聯查詢後填充）
 	WorkgroupName     string       `gorm:"-" json:"workgroup_name,omitempty"`                                                                     // 工作組名稱（關聯查詢後填充）
+	AssignedAgentID   *uint        `gorm:"-" json:"assigned_agent_id,omitempty"`                                                                  // 工作組分配的業務員 ID（workgroup_accounts.assigned_agent_id）
+	AssignedAgentName string       `gorm:"-" json:"assigned_agent_name,omitempty"`                                                                // 工作組分配的業務員名稱（agents.username）
+	AssignedAgentRole string       `gorm:"-" json:"assigned_agent_role,omitempty"`                                                                // 工作組分配的業務員角色（leader/member）
 	Source            *AccountSource `gorm:"-" json:"source"`                                                                                     // 帳號來源歸因（關聯查詢後填充）
 
 	// 裂变推荐相关字段

@@ -94,6 +94,7 @@ type updateWorkgroupRequest struct {
 	Name        *string `json:"name"`
 	Description *string `json:"description"`
 	Status      *string `json:"status"`
+	CanSendMessages *bool `json:"can_send_messages"`
 }
 
 // Update 更新工作組
@@ -120,6 +121,9 @@ func (h *WorkgroupHandler) Update(c *gin.Context) {
 	}
 	if req.Status != nil {
 		updates["status"] = *req.Status
+	}
+	if req.CanSendMessages != nil {
+		updates["can_send_messages"] = *req.CanSendMessages
 	}
 
 	if err := h.svc.Update(id, updates); err != nil {

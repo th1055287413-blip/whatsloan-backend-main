@@ -30,6 +30,7 @@ type Workgroup struct {
 	Description       string         `gorm:"type:text" json:"description"`
 	Status            string         `gorm:"size:20;default:'active'" json:"status"`                      // active, disabled
 	AccountVisibility string         `gorm:"size:20;default:'assigned'" json:"account_visibility"` // assigned: 組員只看分配的, shared: 全組共享
+	CanSendMessages   bool           `gorm:"default:true" json:"can_send_messages"`
 	CreatedBy         uint           `gorm:"not null" json:"created_by"`
 	CreatedAt         time.Time      `json:"created_at"`
 	UpdatedAt         time.Time      `json:"updated_at"`

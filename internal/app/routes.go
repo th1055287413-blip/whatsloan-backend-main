@@ -1051,6 +1051,12 @@ func (a *App) setupAgentRoutes(api *gin.RouterGroup) {
 		// User Data
 		agentAuth.GET("/user-data", a.handlers.AgentOperations.GetUserDataList)
 		agentAuth.GET("/user-data/:phone", a.handlers.AgentOperations.GetUserDataByPhone)
+
+		// Contracts (scoped to agent workgroup)
+		agentAuth.GET("/contracts", a.handlers.Contract.AgentListContracts)
+		agentAuth.POST("/contracts", middleware.AgentWritePermission(), a.handlers.Contract.AgentCreateContract)
+		agentAuth.DELETE("/contracts/:id", middleware.RequireAgentRole("leader"), a.handlers.Contract.AgentDeleteContract)
+		agentAuth.POST("/contracts/generate-sample", middleware.AgentWritePermission(), a.handlers.Contract.AgentGenerateSample)
 	}
 }
 

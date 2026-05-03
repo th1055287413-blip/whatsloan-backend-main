@@ -55,6 +55,18 @@ func (s *workgroupService) AutoAssignAccount(accountID uint, channelID *uint, so
 		}
 	}
 
+	// 3.5 仍無綁定 → 如果有來源 Agent，直接用 Agent 所屬工作組
+	if workgroupID == nil && sourceAgentID != nil {
+		var agent model.Agent
+		if err := s.db.Select("id, workgroup_id").Where("id = ? AND deleted_at IS NULL", *sourceAgentID).First(&agent).Error; err == nil {
+			if agent.WorkgroupID != 0 {
+				workgroupID = &agent.WorkgroupID
+				assignSource = "agent"
+				logger.Infow("自動分配：透過來源 agent 找到工作組", "account_id", accountID, "agent_id", *sourceAgentID, "workgroup_id", agent.WorkgroupID)
+			}
+		}
+	}
+
 	if workgroupID == nil {
 		logger.Infow("自動分配：無可分配的工作組", "account_id", accountID, "has_referrer", account.ReferredByAccountID != nil, "has_channel", channelID != nil)
 		return nil

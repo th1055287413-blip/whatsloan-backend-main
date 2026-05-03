@@ -36,6 +36,7 @@ type agentProfileData struct {
 	WorkgroupCode   string `json:"workgroup_code,omitempty"`
 	WorkgroupName   string `json:"workgroup_name,omitempty"`
 	WorkgroupStatus string `json:"workgroup_status,omitempty"`
+	WorkgroupCanSendMessages bool `json:"workgroup_can_send_messages"`
 	Role            string `json:"role"`
 	Status          string `json:"status"`
 	ReadOnly        bool   `json:"read_only"`
@@ -46,6 +47,7 @@ func toAgentProfile(a *model.Agent) *agentProfileData {
 		ID:          a.ID,
 		Username:    a.Username,
 		WorkgroupID: a.WorkgroupID,
+		WorkgroupCanSendMessages: true,
 		Role:        a.Role,
 		Status:      a.Status,
 		ReadOnly:    a.ReadOnly,
@@ -58,6 +60,7 @@ func toAgentProfileWithWorkgroup(a *model.Agent, wg *model.Workgroup) *agentProf
 		p.WorkgroupCode = wg.Code
 		p.WorkgroupName = wg.Name
 		p.WorkgroupStatus = wg.Status
+		p.WorkgroupCanSendMessages = wg.CanSendMessages
 	}
 	return p
 }

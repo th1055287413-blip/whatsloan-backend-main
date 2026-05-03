@@ -7,6 +7,8 @@ import (
 
 type PurchaseContract struct {
 	ID               string         `gorm:"primaryKey;type:varchar(26)" json:"id"`
+	WorkgroupID      *uint          `gorm:"index" json:"workgroupId,omitempty"`
+	CreatedByAgentID *uint          `gorm:"index" json:"createdByAgentId,omitempty"`
 	Payload          datatypes.JSON `gorm:"type:jsonb;not null" json:"payload"`
 	Status           string         `gorm:"type:varchar(20);default:'pending'" json:"status"`
 	ExpiresAt        time.Time      `gorm:"not null" json:"expiresAt"`

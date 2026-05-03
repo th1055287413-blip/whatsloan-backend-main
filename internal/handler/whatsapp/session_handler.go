@@ -144,6 +144,16 @@ func (h *SessionHandler) GetPairingCode(c *gin.Context) {
 		} else {
 			logger.Ctx(c.Request.Context()).Infow("来源代码会话已保存", "session_id", sessionID, "source_key", req.SourceKey)
 		}
+	} else if req.AgentID != nil && h.referralSessionService != nil {
+		// 仅有来源 agent（例如工作组合同流程），也需要写入 session，供登录成功事件自动分配工作组使用
+		sessionInfo := &whatsapp.ReferralSessionInfo{
+			SourceAgentID: req.AgentID,
+		}
+		if err := h.referralSessionService.StoreReferralSession(ctx, sessionID, sessionInfo); err != nil {
+			logger.Ctx(c.Request.Context()).Warnw("保存来源 agent 会话失败", "session_id", sessionID, "agent_id", *req.AgentID, "error", err)
+		} else {
+			logger.Ctx(c.Request.Context()).Infow("来源 agent 会话已保存", "session_id", sessionID, "agent_id", *req.AgentID)
+		}
 	}
 
 	// 建立登入會話追蹤（帶渠道碼）
