@@ -112,7 +112,7 @@ func (s *Service) createContract(req *CreateContractRequest, workgroupID *uint, 
 	if domain == "" {
 		domain = "contract.whatswoo.org"
 	}
-	url := fmt.Sprintf("https://%s/?id=%s", domain, contractID)
+	url := fmt.Sprintf("http://%s/?id=%s", domain, contractID)
 
 	return &CreateContractResponse{
 		ContractID: contractID,
